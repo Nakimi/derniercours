@@ -67,6 +67,20 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+
+
+// Fonction pour calculer la moyenne des notes d'un élève
+function calculerMoyenneParEleve(notes, id_eleve) {
+  if (!notes || notes.length === 0) {
+  return 0; // Pas de notes => moyenne nulle
+  }
+  
+  const total = notes.reduce((acc, note) => acc + note.note, 0);
+  const moyenne = total / notes.length;
+  
+  return Number(moyenne.toFixed(2)); // Arrondi à 2 décimales
+  }
+  
 router.get("/moyenne/:id_eleve", async (req, res) => {
   try {
     const id_eleve = req.params.id_eleve;
