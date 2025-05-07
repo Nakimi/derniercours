@@ -1,11 +1,11 @@
 import { Router } from "express";
 const router = Router();
-import Auteurs from "../models/auteurs.js";
+import Mem from "../models/moyenne_eleve_matiere.js";
 
 router.get("/", async (req, res) => {
   try {
-    const auteurs = await Auteurs.find();
-    res.json(auteurs);
+    const mem = await Mem.find();
+    res.json(mem);
   } catch (err) {
     res.status(500).json({ message: "Erreur serveur" });
   }
@@ -13,8 +13,8 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
     try {
-      const auteurs = await Auteurs.findById();
-      res.json(auteurs);
+      const mem = await Mem.findById(req.params.id);
+      res.json(mem);
     } catch (err) {
       res.status(500).json({ message: "Erreur serveur" });
     }
@@ -22,9 +22,9 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const newAuteurs = new Auteurs(req.body);
-    await newAuteurs.save();
-    res.json(newAuteurs);
+    const newMem = new Mem(req.body);
+    await newMem.save();
+    res.json(newMem);
   } catch (err) {
     res.status(500).json({ message: "Erreur serveur" });
   }
@@ -32,8 +32,8 @@ router.post("/", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
     try {
-      const auteurs = await Auteurs.findById();
-      res.json(auteurs);
+      const mem = await Mem.findById(req.params.id);
+      res.json(mem);
     } catch (err) {
       res.status(500).json({ message: "Erreur serveur" });
     }
@@ -42,8 +42,8 @@ router.put("/:id", async (req, res) => {
 
   router.patch("/:id", async (req, res) => {
     try {
-      const auteurs = await Auteurs.findById();
-      res.json(auteurs);
+      const mem = await Mem.findById(req.params.id);
+      res.json(mem);
     } catch (err) {
       res.status(500).json({ message: "Erreur serveur" });
     }
@@ -51,8 +51,8 @@ router.put("/:id", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   try {
-    await Auteurs.findByIdAndDelete(req.params.id);
-    res.json({ message: "Auteurs supprimé" });
+    await Mem.findByIdAndDelete(req.params.id);
+    res.json({ message: "Mem supprimé" });
   } catch (err) {
     res.status(500).json({ message: "Erreur serveur" });
   }
