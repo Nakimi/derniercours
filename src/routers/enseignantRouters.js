@@ -1,67 +1,82 @@
 import { Router } from "express";
-const router = Router();
 import Enseignants from "../models/enseignant.js";
 
+const router = Router();
+
+// Récupérer tous les enseignants
 router.get("/", async (req, res) => {
   try {
-    const enseignant = await Enseignants.find();
+    const enseignants = await Enseignants.find();
+    res.json(enseignants);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Récupérer un enseignant par ID
+router.get("/:id", async (req, res) => {
+  try {
+    const enseignant = await Enseignants.findById(req.params.id);
+    if (!enseignant) return res.status(404).json({ message: "Enseignant non trouvé" });
     res.json(enseignant);
   } catch (err) {
-    res.status(500).json({ message: "err" });
+    res.status(500).json({ message: err.message });
   }
 });
 
-router.get("/:id", async (req, res) => {
-    try {
-      const enseignant = await Enseignants.findById(req.params.id);
-      res.json(enseignant);
-    } catch (err) {
-      res.status(500).json({ message: "err" });
-    }
-  });
-
+// Ajouter un nouvel enseignant
 router.post("/", async (req, res) => {
   try {
-    const newEnseignants = new Enseignants(req.body);
-    await newEnseignants.save();
-    res.json(newEnseignants);
+    const newEnseignant = new Enseignants(req.body);
+    await newEnseignant.save();
+    res.status(201).json(newEnseignant);
   } catch (err) {
-    res.status(500).json({ message: "err" });
+    res.status(500).json({ message: err.message });
   }
 });
 
+// Modifier complètement un enseignant
 router.put("/:id", async (req, res) => {
   try {
     const updatedEnseignant = await Enseignants.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true, runValidators: true } // `new: true` retourne l'objet mis à jour
+      { new: true, runValidators: true }
     );
     if (!updatedEnseignant) {
-      return res.status(404).json({ message: "Prof non trouvé" });
+      return res.status(404).json({ message: "Enseignant non trouvé" });
     }
     res.json(updatedEnseignant);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
-  
 
-  router.patch("/:id", async (req, res) => {
-    try {
-      const enseignant = await Enseignants.findById(req.params.id);
-      res.json(enseignant);
-    } catch (err) {
-      res.status(500).json({ message: "err" });
+// Modifier partiellement un enseignant
+router.patch("/:id", async (req, res) => {
+  try {
+    const updatedEnseignant = await Enseignants.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body },
+      { new: true, runValidators: true }
+    );
+    if (!updatedEnseignant) {
+      return res.status(404).json({ message: "Enseignant non trouvé" });
     }
-  });
+    res.json(updatedEnseignant);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
+// Supprimer un enseignant
 router.delete("/:id", async (req, res) => {
   try {
-    await Enseignants.findByIdAndDelete(req.params.id);
-    res.json({ message: "Enseignants supprimé" });
+    const deleted = await Enseignants.findByIdAndDelete(req.params.id);
+    if (!deleted) return res.status(404).json({ message: "Enseignant non trouvé" });
+    res.json({ message: "Enseignant supprimé" });
   } catch (err) {
-    res.status(500).json({ message: "err" });
+    res.status(500).json({ message: err.message });
   }
 });
 
