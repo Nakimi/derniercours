@@ -67,4 +67,15 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+router.get("/moyenne/:id_eleve", async (req, res) => {
+  try {
+    const id_eleve = req.params.id_eleve;
+    const notes = await Note.find({ id_eleve });
+    const moyenne = calculerMoyenneParEleve(notes, id_eleve);
+    res.json({ moyenne });
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
+});
+
 export default router;

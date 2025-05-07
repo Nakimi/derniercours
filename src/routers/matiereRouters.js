@@ -59,4 +59,15 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+router.get("/moyenne/:id_matiere", async (req, res) => {
+  try {
+    const id_matiere = req.params.id_matiere;
+    const notes = await Note.find({ id_matiere });
+    const moyenne = calculerMoyenneParmatiere(notes, id_matiere);
+    res.json({ moyenne });
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
+});
+
 export default router;
